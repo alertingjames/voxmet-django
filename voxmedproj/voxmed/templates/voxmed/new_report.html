@@ -1,0 +1,1154 @@
+{% extends 'voxmed/base_home.html' %}
+{% block title %}New Report{% endblock %}
+{% block body %}
+
+<br>
+<br>
+<br>
+
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<style>
+
+html, body{
+  background: url("/static/voxmed/images/accountbg.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  z-index: 990;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: orange;
+}
+
+#admin{display:none}
+
+.header {
+  background-color: #0495af;
+  color: white;
+  font-size: 1.5em;
+  padding: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  border: 1px solid white;
+}
+
+.table-business {
+  border: 1px solid #327a81;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+  background-color: white;
+  overflow-x:auto;
+}
+
+.table-business1 {
+  border: 1px solid #ffffff;
+  width: 100%;
+  background-color: white;
+  overflow-x:auto;
+  position: relative;
+  display:none;
+}
+
+.table>tbody>tr>td{
+    vertical-align: middle;
+    horizontal-align: middle;
+}
+
+table td, table th {
+  color: #2b686e;
+  padding: 10px;
+  border: 1px solid white;
+  text-align: center;
+  vertical-align: middle;
+}
+
+table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+table td:last-child {
+  font-size: 0.95em;
+  line-height: 1.4;
+  text-align: center;
+}
+
+table th {
+  background-color: #04a2be;
+  font-weight: 520;
+  color:white;
+  text-align: center;
+  vertical-align: middle;
+}
+
+table tr:nth-child(2n) {
+  background-color: white;
+  border: 1px solid #327a81;
+}
+
+table tr:nth-child(2n+1) {
+  background-color: #edf7f8;
+  border: 1px solid white;
+}
+
+#admin{
+    width:60px; height:60px; border-radius:5%; background:white; margin-top:20px; margin-left:10px; z-index:2; position:fixed; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1); display:none;
+}
+
+.centered-and-cropped { object-fit:cover }
+
+.busiaddress{
+    color:black;
+}
+
+.busiaddress:hover{
+    color:red;
+}
+
+.owner_name{color:black;}
+
+.hint{
+    color:red;
+    font-size:12px;
+    display:none;
+}
+
+.hyperlink:hover .hint {
+    display:block;
+}
+
+.hyperlink{
+    color:black;
+    font-size:25px;
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+form h1 {
+  font-weight:500;
+  background: #008CBA none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 15px 18px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+  opacity:0.6;
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:1200px;
+  width:auto;
+  height:auto;
+  margin-top: 0%;
+  margin-bottom: 2% auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+a {
+  text-decoration:inherit
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 30px;
+  float:middle;
+  margin:auto;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-size:16px;
+  font-weight: 800;
+  line-height: 2;
+  color: #008CBA;
+}
+
+textarea {
+  border-radius: 8px;
+  border: 1px solid #EEE;
+  margin: 0;
+  width: 100%;
+  height: auto;
+  float: middle;
+  padding: 15px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+.bouton-update{
+  background-color: #008CBA;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  box-sizing: border-box;
+}
+
+select {
+  margin: 0px;
+  font-size:16px;
+  font-weight: 800;
+  line-height: 2;
+  color: #008CBA;
+  background-color:transparent;
+  border:0;
+}
+
+.lang {
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+    width: 46%;
+    height: 25px;
+    float: left;
+    padding: 0px 15px;
+    opacity: 0.9;
+    color: black;
+}
+
+.downlink{
+    color:#ccc;
+    font-weight:200;
+    font-size:14px;
+}
+
+.downlink:hover{
+    color:black;
+}
+
+label{font-weight:600; color:#0066cc; font-size:15px;}
+
+.slide {
+    display: inline-block;
+}
+
+label.cameraButton {
+  display: inline-block;
+  /* Styles to make it look like a button */
+  padding: 10px 22px;
+  border: 1.5px solid #666;
+  border-color: #EEE #CCC #CCC #EEE;
+  border-radius:50px;
+  font-size:14px;
+  color:white;
+  font-weight:300;
+  width:auto;
+  height:auto;
+  text-align:center;
+  background-color: green;
+}
+
+/* Look like a clicked/depressed button */
+label.cameraButton:active {
+  border-color: #CCC #EEE #EEE #CCC;
+}
+
+/* This is the part that actually hides the 'Choose file' text box for camera inputs */
+label.cameraButton input[accept*="image"] {
+  display: none;
+}
+
+label input {
+  display: none;/* <-- hide the default checkbox */
+}
+label span {/* <-- style the artificial checkbox */
+  height: 25px;
+  width: 25px;
+  border:2px solid #008CBA;
+  margin-right:20px;
+  display: inline-block;
+  position: relative;
+}
+[type=checkbox]:checked + span:before {/* <-- style its checked state..with a ticked icon */
+  content: '\2714';
+  position: absolute;
+  top: 0px;
+  left: 5px;
+}
+
+#patientListBox {
+    position: absolute;
+    transform: translateY(100%);
+    -webkit-transform: translateY(100%);
+}
+
+
+.slide-in {
+    animation: slide-in 0.5s forwards;
+    -webkit-animation: slide-in 0.5s forwards;
+}
+
+.slide-out {
+    animation: slide-out 0.5s forwards;
+    -webkit-animation: slide-out 0.5s forwards;
+}
+
+@keyframes slide-in {
+    100% { transform: translateY(0%); }
+}
+
+@-webkit-keyframes slide-in {
+    100% { -webkit-transform: translateY(0%); }
+}
+
+@keyframes slide-out {
+    0% { transform: translateY(0%); }
+    100% { transform: translateY(100%); }
+}
+
+@-webkit-keyframes slide-out {
+    0% { -webkit-transform: translateY(0%); }
+    100% { -webkit-transform: translateY(100%); }
+}
+
+
+#backgroundOverlay{
+    background-color:rgba(0,0,0,0.3);
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display:none;
+}
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript" src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"></script>
+
+<img src="/static/voxmed/images/progressbar.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle;
+	transform:translate(-50%, -50%); width:80px; z-index:2000; top:120px; display: none;" id="gif">
+
+<img src="{{member.picture_url}}" style="position:relative; width:60px; height:60px; border-radius:50%; z-index:100; left:1%; margin-top:1%;">
+<a href="javascript:void(0)" onclick="javascript:document.getElementById('control-panel').style.display='block'; javascript:document.getElementById('audio-panel').style.display='none';">
+    <img src="/static/voxmed/images/audio.png" style="position:relative; width:60px; height:60px; border-radius:50%; z-index:100; left:2.5%; margin-top:1%;">
+</a>
+<a href="javascript:void(0)" onclick="javascript:document.getElementById('audio-panel').style.display='block'; javascript:document.getElementById('control-panel').style.display='none';">
+    <img id="play-button" src="/static/voxmed/images/speaker.png" style="float:right; width:60px; height:60px; padding:8px; background:rgba(255,255,255,0.8);
+        border-radius:50%; z-index:100; margin-right:1%; margin-top:1%; display:none;">
+</a>
+
+<img src="/static/voxmed/images/progressbar.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle; border-radius: 1px;
+	transform:translate(-50%, -50%); width:auto; z-index:999; top:120px; display: none;" id="gif">
+
+<div style="position:fixed; left:50%;transform: translate(-50%, -50%); float:middle; z-index:250; top:250px; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0); display:none;
+    padding: 5px 5px 25px 5px; background: white; border-radius:5px;" id="audio-panel">
+    <img src="/static/voxmed/images/cancel.png" style="width:25px; height:25px; float:right;" onclick="javascript:document.getElementById('audio-panel').style.display='none';">
+    <div style="width:100%; padding:5px; text-align:center; margin-top:10px; margin-bottom:25px; color:black; font-size:18px; font-weight:600;">Play Recorded Audio</div>
+    <ul id='ul' style="width:300px;"></ul>
+</div>
+
+<form id="edit" action="/reportpost" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="contentform">
+		<div class="formcontent">
+            <center>
+                <h1 style="font-size:21px; text-align:center; width:100%;">Create New Report</h1><br>
+                <div style="color:white; font-size:20px; text-align:left; width:100%;">
+                    {% for keyword in keywords %}
+                        <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+                        <div class="form-group">
+                            <!--<a href="javascript:void(0);" onclick=""><p>{{keyword.keyword}} <i class="fa fa-caret-down" style="margin-left:10px;" aria-hidden="true"></i></p></a>-->
+                            <input hidden name="keyword[]" class="key" value="{{keyword.keyword}}">
+                            <select onchange="javascript:setTitle(this);">
+                                <option value="{{keyword.keyword}}" selected>{{keyword.keyword}}</option>
+                                <option disabled>Change the keyword?</option>
+                                {% for kwd in allkeywords %}
+                                <option value="{{kwd.keyword}}">{{kwd.keyword}}</option>
+                                {% endfor %}
+                            </select>
+
+                            <textarea name="body[]" rows="1" data-rule="required" data-msg="" class="body" required placeholder="Enter content by your speech..." style="font-size:18px; margin-top:5px;"></textarea>
+                		</div>
+                        <script>autosize(document.getElementsByClassName("body"));</script>
+                    {% endfor %}
+                </div>
+            </center>
+            <!--<input type="file" name="audio" id="audio" style="display:none;">-->
+            <input hidden name="patient_id" id="patient_id" value="">
+            <input hidden name="status" id="status" value="">
+
+            <div class="form-group">
+                <p>Attach Report Pictures (Optional): </p>
+			    <center>
+                    <img src="/static/voxmed/images/anonymous.png" style="width:auto; height:300px; margin-top:10px; margin-bottom:20px; display:none;" id="output">
+                </center>
+                <div id="image-panel" class="form-group" style="display:none;">
+                    <div style="width:100%; max-height:120px; padding:0px 15px 0px 15px">
+                        <output id="divv" class="dragscroll" style="white-space: nowrap; overflow-y: hidden; overflow: auto; cursor: grab; cursor : -o-grab; cursor : -moz-grab; cursor : -webkit-grab;">
+                        </output>
+                    </div>
+			    </div>
+                <label class="cameraButton"><i class="fa fa-camera-retro" style="font-size:20px; margin-right:8px;"></i>Load Pictures
+                    <input type="file" name="pictures" value="http://lorempixel.com/100/100/people/9" id="picture" accept="image/*" multiple/>
+                </label>
+                <script>
+                    function readFile() {
+                        if (this.files) {
+                            var output = document.getElementById("divv");
+                            output.innerHTML = "";
+                            var files = this.files;
+                            document.getElementById("image-panel").style.display = "block";
+                            for(var i = 0; i< files.length; i++)
+                            {
+                                var file = files[i];
+                                //Only pics
+                                if(!file.type.match('image'))
+                                        continue;
+                                var picReader = new FileReader();
+                                picReader.addEventListener("load",function(event){
+                                    var picFile = event.target;
+
+                                    document.getElementById("output").src = event.target.result;
+
+                                    var div = document.createElement("div");
+                                    div.classList.add("slide");
+                                    div.innerHTML = "<img src='" + picFile.result + "'" +
+                                                        "title='" + picFile.name + "'" + " style=" + "'width:auto; height:120px; float:left;'" + "/>";
+
+                                    div.addEventListener("click", function() {
+                                        document.getElementById("output").src =  picFile.result;
+                                    });
+                                    output.insertBefore(div,null);
+                                });
+
+                                //Read the image
+                                picReader.readAsDataURL(file);
+                            }
+                        }
+                    }
+                    document.getElementById("picture").addEventListener("change", readFile);
+                </script>
+            </div>
+
+            <div class="form-group">
+                <label style="color:#008CBA; font-size:16px;">
+                    <input type='checkbox' hidden formaction="javascript:void(0);" onchange="corrected(this)">
+                    <span style="float:left; color:red;"></span>
+                    <div style="color:#008CBA; font-size:16px; padding-top:3px; float:left; text-decoration: underline;">Reviewed & Corrected</div>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <img src="/static/voxmed/images/logo.png" style="width:50px; height:50px; border-radius:50%; float:left; display:none;" id="patient_picture">
+                <p id="selected_patient" style="float:left; margin-left:10px; margin-top:8px;">No patient selected...</p>
+                <a href="javascript:void(0)" onclick="javascript:openPatientBox();">
+                    <label style="color:green; font-size:14px; margin-left:10px; padding:5px 12px; border-radius:50px; border:1.5px solid green;">Choose a patient</label>
+                </a>
+            </div>
+
+			<div class="form-group" style="margin-top:2%; margin-bottom:15%;">
+				<button type="button" onclick="javascript:submitReport();" class="bouton-update">Submit</button>
+			</div>
+        </div>
+	</div>
+</form>
+
+
+<form id="control-panel" style="font-size:16px; font-weight:300; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0); display:none;
+	position:fixed; left:50%; float:middle; padding: 10px 5px 25px 5px; background: rgba(255, 255, 255, 0.8); border-radius:5px;
+	transform:translate(-50%, -50%); max-width:600px; width:auto; min-width:360px; z-index:200; top:250px;">
+    <img src="/static/voxmed/images/cancel.png" style="width:25px; height:25px; float:right;" onclick="javascript:document.getElementById('control-panel').style.display='none';">
+    <center>
+        <div id="note" style="width:100%; padding:5px; text-align:center;"></div>
+        <div id="message" style="font-size:12px; background: transparent; color: #737373; padding:8px; height:auto; width:100%; text-align:left; display:none;">
+            <span class="final" id="final_span"></span> <span class="interim" id="interim_span"></span>
+        </div><br>
+        <div id="div_start">
+            <a href="javascript:startButton();">
+                <img alt="Start" id="start_img" src="/static/voxmed/images/mic.gif" style="width:60px; height:60px; border-radius:50px; box-shadow: 0px 0px 30px rgba(0, 0, 0, 1.0);">
+            </a>
+        </div>
+        <div id="div_language" style="width:100%; text-align:center; margin:20px auto;">
+            <select id="select_language" class="lang" style="margin-left:3%;" onchange="updateCountry()"></select>
+            <select id="select_dialect" class="lang" style="margin-left:2%; margin-right:3%;"></select>
+        </div>
+    </center>
+</form>
+
+
+<div class="table-business" id="patientListBox" style="position:fixed; float:bottom; z-index:200; bottom:0; display:block; width:100%; height:83%; display:none; background:white;">
+
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>-->
+    <div class="table-business1" id="header" style="z-index:900; position:relative; right:15px;" align="top">
+        <table cellspacing="0" class="table table-fit">
+            <tr>
+                <th style="width:4%;">id</th>
+                <th style="width:6%;">Picture</th>
+                <th style="width:6%;">Name</th>
+                <th style="width:12%;">Email</th>
+                <th style="width:4%;">Age</th>
+                <th style="width:6%;">Registered at</th>
+                <th style="width:6%;">Reports assigned</th>
+                <th style="width:10%;">Select</th>
+            </tr>
+        </table>
+    </div>
+
+    <div class="header">
+        VOXMED PATIENTS
+        <img src="/static/voxmed/images/cancelicon.png" style="width:25px; height:25px; float:right;" onclick="javascript:closePatientBox();">
+        <div style="font-size:12px; margin-right:25px;">Select a patient to submit to</div>
+    </div>
+    <form action="#" method="post" id="list" style=" height:90%; overflow:auto;" onscroll="scrollFunction()">
+        {% csrf_token %}
+        <table cellspacing="0" class="table table-fit">
+        <tr>
+            <th style="width:4%;">id</th>
+            <th style="width:6%;">Picture</th>
+            <th style="width:6%;">Name</th>
+            <th style="width:12%;">Email</th>
+            <th style="width:4%;">Age</th>
+            <th style="width:6%;">Registered at</th>
+            <th style="width:6%;">Reports assigned</th>
+            <th style="width:10%;">Select</th>
+        </tr>
+        {% if patients %}
+            {% for patient in patients %}
+            <tr class="test" id="{{patient.id}}">
+                <td><div>{{forloop.counter}}</div></td>
+                <td>
+                    <a href="{{patient.picture}}" target="_blank">
+                        <img class="centered-and-cropped" src="{{patient.picture}}" alt="" style="width:60px; height:60px; border-radius:50%;"/>
+                    </a>
+                </td>
+                <td>{{patient.name}}</td>
+                <td>{{patient.email}}</td>
+                <td>{{patient.age}}</td>
+                <td><div id="date" style="color:black; font-size:14px;">{{patient.registered_time}}</div></td>
+                <td>
+                    <a href="/reports?member_id={{patient.id}}">
+                        <div class="hyperlink">
+                            {{patient.reports}}<br>
+                            <div class="hint">Click to view</div>
+                        </div>
+                    </a>
+                </td>
+                <td>
+                    <div>
+                        <a href="javascript:void(0);" role="button" onclick="confirmPatient(this)" id="{{patient.id}}">
+                            <img src="/static/voxmed/images/approveicon.png" style="width:40px; height:40px;">
+                            <input type="hidden" value="{{patient.name}}">
+                            <div style="display:none;">{{patient.picture}}</div>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        {%else %}
+
+        {% endif %}
+        </table>
+    </form>
+</div>
+
+<div id="backgroundOverlay"></div>
+
+<script>
+
+document.getElementById("navbar").style.backgroundColor = "black";
+
+function getCookie(name) {
+    console.log('getCookie');
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                    }
+            }
+    }
+    console.log('cookie:' + cookieValue);
+    return cookieValue;
+}
+
+function post(path, params, method) {
+   method = method || "post"; // Set method to post by default if not specified.
+
+   // The rest of this code assumes you are not using a library.
+   // It can be made less wordy if you use one.
+   var form = document.createElement("form");
+   form.setAttribute("method", method);
+   form.setAttribute("action", path);
+
+   for(var key in params) {
+      if(params.hasOwnProperty(key)) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("name", key);
+          hiddenField.setAttribute("value", params[key]);
+
+          form.appendChild(hiddenField);
+      }
+   }
+
+   var hiddenField1 = document.createElement("input");
+   hiddenField1.setAttribute("type", "hidden");
+   hiddenField1.setAttribute("name", 'csrfmiddlewaretoken');
+   hiddenField1.setAttribute("value", getCookie('csrftoken'));
+   form.appendChild(hiddenField1);
+
+   document.body.appendChild(form);
+   form.submit();
+}
+
+</script>
+
+<script>
+
+let log = console.log.bind(console),
+  stream,
+  recorder,
+  counter=1,
+  chunks,
+  media;
+
+mediaOptions = {
+    audio: {
+        tag: 'audio',
+        type: 'audio/mp3',
+        ext: '.mp3',
+        gUM: {audio: true}
+    }
+};
+
+media = mediaOptions.audio;
+
+navigator.mediaDevices.getUserMedia(media.gUM).then(_stream => {
+    stream = _stream;
+    recorder = new MediaRecorder(stream);
+    recorder.ondataavailable = e => {
+      chunks.push(e.data);
+      if(recorder.state == 'inactive')  makeLink();
+    };
+    log('got media successfully');
+}).catch(log);
+
+</script>
+
+<script>
+// If you modify this array, also update default language / dialect below.
+var langs =
+[['Afrikaans',       ['af-ZA']],
+ ['አማርኛ',           ['am-ET']],
+ ['Azərbaycanca',    ['az-AZ']],
+ ['বাংলা',            ['bn-BD', 'বাংলাদেশ'],
+                     ['bn-IN', 'ভারত']],
+ ['Bahasa Indonesia',['id-ID']],
+ ['Bahasa Melayu',   ['ms-MY']],
+ ['Català',          ['ca-ES']],
+ ['Čeština',         ['cs-CZ']],
+ ['Dansk',           ['da-DK']],
+ ['Deutsch',         ['de-DE']],
+ ['English',         ['en-AU', 'Australia'],
+                     ['en-CA', 'Canada'],
+                     ['en-IN', 'India'],
+                     ['en-KE', 'Kenya'],
+                     ['en-TZ', 'Tanzania'],
+                     ['en-GH', 'Ghana'],
+                     ['en-NZ', 'New Zealand'],
+                     ['en-NG', 'Nigeria'],
+                     ['en-ZA', 'South Africa'],
+                     ['en-PH', 'Philippines'],
+                     ['en-GB', 'United Kingdom'],
+                     ['en-US', 'United States']],
+ ['Español',         ['es-AR', 'Argentina'],
+                     ['es-BO', 'Bolivia'],
+                     ['es-CL', 'Chile'],
+                     ['es-CO', 'Colombia'],
+                     ['es-CR', 'Costa Rica'],
+                     ['es-EC', 'Ecuador'],
+                     ['es-SV', 'El Salvador'],
+                     ['es-ES', 'España'],
+                     ['es-US', 'Estados Unidos'],
+                     ['es-GT', 'Guatemala'],
+                     ['es-HN', 'Honduras'],
+                     ['es-MX', 'México'],
+                     ['es-NI', 'Nicaragua'],
+                     ['es-PA', 'Panamá'],
+                     ['es-PY', 'Paraguay'],
+                     ['es-PE', 'Perú'],
+                     ['es-PR', 'Puerto Rico'],
+                     ['es-DO', 'República Dominicana'],
+                     ['es-UY', 'Uruguay'],
+                     ['es-VE', 'Venezuela']],
+ ['Euskara',         ['eu-ES']],
+ ['Filipino',        ['fil-PH']],
+ ['Français',        ['fr-FR']],
+ ['Basa Jawa',       ['jv-ID']],
+ ['Galego',          ['gl-ES']],
+ ['ગુજરાતી',           ['gu-IN']],
+ ['Hrvatski',        ['hr-HR']],
+ ['IsiZulu',         ['zu-ZA']],
+ ['Íslenska',        ['is-IS']],
+ ['Italiano',        ['it-IT', 'Italia'],
+                     ['it-CH', 'Svizzera']],
+ ['ಕನ್ನಡ',             ['kn-IN']],
+ ['ភាសាខ្មែរ',          ['km-KH']],
+ ['Latviešu',        ['lv-LV']],
+ ['Lietuvių',        ['lt-LT']],
+ ['മലയാളം',          ['ml-IN']],
+ ['मराठी',             ['mr-IN']],
+ ['Magyar',          ['hu-HU']],
+ ['ລາວ',              ['lo-LA']],
+ ['Nederlands',      ['nl-NL']],
+ ['नेपाली भाषा',        ['ne-NP']],
+ ['Norsk bokmål',    ['nb-NO']],
+ ['Polski',          ['pl-PL']],
+ ['Português',       ['pt-BR', 'Brasil'],
+                     ['pt-PT', 'Portugal']],
+ ['Română',          ['ro-RO']],
+ ['සිංහල',          ['si-LK']],
+ ['Slovenščina',     ['sl-SI']],
+ ['Basa Sunda',      ['su-ID']],
+ ['Slovenčina',      ['sk-SK']],
+ ['Suomi',           ['fi-FI']],
+ ['Svenska',         ['sv-SE']],
+ ['Kiswahili',       ['sw-TZ', 'Tanzania'],
+                     ['sw-KE', 'Kenya']],
+ ['ქართული',       ['ka-GE']],
+ ['Հայերեն',          ['hy-AM']],
+ ['தமிழ்',            ['ta-IN', 'இந்தியா'],
+                     ['ta-SG', 'சிங்கப்பூர்'],
+                     ['ta-LK', 'இலங்கை'],
+                     ['ta-MY', 'மலேசியா']],
+ ['తెలుగు',           ['te-IN']],
+ ['Tiếng Việt',      ['vi-VN']],
+ ['Türkçe',          ['tr-TR']],
+ ['اُردُو',            ['ur-PK', 'پاکستان'],
+                     ['ur-IN', 'بھارت']],
+ ['Ελληνικά',         ['el-GR']],
+ ['български',         ['bg-BG']],
+ ['Pусский',          ['ru-RU']],
+ ['Српски',           ['sr-RS']],
+ ['Українська',        ['uk-UA']],
+ ['한국어',            ['ko-KR']],
+ ['中文',             ['cmn-Hans-CN', '普通话 (中国大陆)'],
+                     ['cmn-Hans-HK', '普通话 (香港)'],
+                     ['cmn-Hant-TW', '中文 (台灣)'],
+                     ['yue-Hant-HK', '粵語 (香港)']],
+ ['日本語',           ['ja-JP']],
+ ['हिन्दी',             ['hi-IN']],
+ ['ภาษาไทย',         ['th-TH']]];
+
+for (var i = 0; i < langs.length; i++) {
+  select_language.options[i] = new Option(langs[i][0], i);
+}
+// Set default language / dialect.
+select_language.selectedIndex = 10;
+updateCountry();
+select_dialect.selectedIndex = 11;
+
+function updateCountry() {
+  for (var i = select_dialect.options.length - 1; i >= 0; i--) {
+    select_dialect.remove(i);
+  }
+  var list = langs[select_language.selectedIndex];
+  for (var i = 1; i < list.length; i++) {
+    select_dialect.options.add(new Option(list[i][1], list[i][0]));
+  }
+ // select_dialect.style.visibility = list[1].length == 1 ? 'hidden' : 'visible';
+}
+
+var final_transcript = '';
+var recognizing = false;
+var ignore_onend;
+var fAllow;
+var start_timestamp;
+var buf = '';
+var fOn = false;
+
+var note1 = '';
+
+if (!('webkitSpeechRecognition' in window)) {
+
+}
+else {
+  var recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = false;
+
+  recognition.onstart = function() {
+    recognizing = true;
+    start_img.src = '/static/voxmed/images/mic-animate.gif';
+    startRecording();
+  };
+
+  recognition.onerror = function(event) {
+    if (event.error == 'no-speech') {
+      start_img.src = '/static/voxmed/images/mic.gif';
+      ignore_onend = true;
+    }
+    if (event.error == 'audio-capture') {
+      start_img.src = '/static/voxmed/images/mic.gif';
+      ignore_onend = true;
+    }
+    if (event.error == 'not-allowed') {
+      ignore_onend = true;
+      fNotAllow = true;
+      fOn = false;
+    }
+  };
+
+  recognition.onend = function() {
+    recognizing = false;
+    if (!fOn) {
+        if (fNotAllow) start_img.src = '/static/voxmed/images/mic-slash.gif';
+        else {
+            start_img.src = '/static/voxmed/images/mic.gif';
+            stopRecording();
+        }
+        return;
+    }
+    keepTalking();
+  };
+
+  recognition.onresult = function(event) {
+    var interim_transcript = '';
+    if (typeof(event.results) == 'undefined') {
+      recognition.onend = null;
+      recognition.stop();
+      return;
+    }
+    for (var i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        final_transcript = event.results[i][0].transcript;
+      } else {
+        interim_transcript += event.results[i][0].transcript;
+      }
+    }
+    final_transcript = capitalize(final_transcript);
+    final_span.innerHTML = linebreak(final_transcript);
+    interim_span.innerHTML = linebreak(interim_transcript);
+
+    // alert('Hello');
+
+    document.getElementById('message').style.display = "block";
+
+    note1 += final_span.innerHTML + " ";
+
+    if (!synth.speaking){
+        if(buf != final_span.innerHTML + " " + interim_span.innerHTML){
+            buf = final_span.innerHTML + " " + interim_span.innerHTML;
+
+            var focused = document.activeElement;
+            if (!focused || focused == document.body)
+                focused = null;
+            else if (document.querySelector)
+                focused = document.querySelector(":focus");
+            if (focused != null) {
+                var space = "";
+                if (focused.value == "") space = "";
+                else space = " ";
+                focused.value = focused.value + space + buf;
+                document.getElementById('message').style.display = "none";
+            }else{
+                var x, i;
+                x = document.querySelectorAll(".key");
+                for (i = 0; i < x.length; i++) {
+                  if(x[i].value.toLowerCase() == buf.toLowerCase() || x[i].value.toLowerCase() == final_span.innerHTML.toLowerCase()){
+                    var parent = x[i].parentElement;
+                    parent.querySelector("textarea").focus();
+                    document.getElementById('message').style.display = "none";
+                    break;
+                  }else{
+                      if(i == x.length - 1){
+                          var parent = x[0].parentElement;
+                          var textBox = parent.querySelector("textarea");
+                          textBox.focus();
+                          document.getElementById('message').style.display = "none";
+                          var space = "";
+                          if (textBox.value == "") space = "";
+                          else space = " ";
+                          textBox.value = textBox.value + space + buf;
+                      }
+                  }
+                }
+            }
+
+        }
+    }
+
+    return;
+
+  };
+}
+
+var two_line = /\n\n/g;
+var one_line = /\n/g;
+function linebreak(s) {
+  return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+}
+
+var first_char = /\S/;
+function capitalize(s) {
+  return s.replace(first_char, function(m) { return m.toUpperCase(); });
+}
+
+function startButton() {
+  if (recognizing) {
+      fOn = false;
+    //   recognition.stop();
+      stopRecording();
+      return;
+  }
+  final_transcript = '';
+  recognition.lang = select_dialect.value;
+  recognition.start();
+  ignore_onend = false;
+  fNotAllow = false;
+  fOn = true;
+  if(note1.length == 0)
+    start_timestamp = new Date().getTime();
+  final_span.innerHTML = "";
+  interim_span.innerHTML = "";
+  start_img.src = '/static/voxmed/images/mic-slash.gif';
+  note1 = "";
+}
+
+function keepTalking() {
+  recognizing = true;
+  final_transcript = '';
+  recognition.lang = select_dialect.value;
+  recognition.start();
+}
+
+function hear(mes){
+    document.getElementById("note").innerHTML = mes;
+}
+
+</script>
+
+<script>
+
+function startRecording(){
+    chunks=[];
+    recorder.start();
+    document.getElementById('play-button').style.display = "none";
+}
+
+function stopRecording(){
+    recorder.stop();
+    document.getElementById("control-panel").style.display = "none";
+}
+
+var form = document.getElementById('edit');
+var file = null;
+
+function makeLink(){
+  let blob = new Blob(chunks, {type: media.type })
+    , url = URL.createObjectURL(blob)
+    , li = document.createElement('li')
+    , mt = document.createElement(media.tag)
+    , hf = document.createElement('a')
+  ;
+  mt.controls = true;
+  mt.src = url;
+  hf.href = url;
+  hf.download = `${counter++}${media.ext}`;
+  hf.innerHTML = `donwload ${hf.download}`;
+  hf.style.cssFloat = "right";
+  hf.classList.add("downlink");
+  li.appendChild(mt);
+  li.appendChild(hf);
+  var ul = document.getElementById('ul');
+  ul.innerHTML = '';
+  ul.appendChild(li);
+  document.getElementById('play-button').style.display = "block";
+  file = blobToFile(blob, hf.download);
+}
+
+function blobToFile(theBlob, fileName){
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    theBlob.lastModifiedDate = new Date();
+    theBlob.name = fileName;
+    return theBlob;
+}
+
+function submitReport(){
+
+    if(file == null){
+        alert('Please record a report audio.');
+        document.getElementById("control-panel").style.display = "block";
+        return;
+    }
+
+    var x, i;
+    x = document.querySelectorAll(".body");
+    for (i = 0; i < x.length; i++) {
+      if(x[i].value == ''){
+          alert('Please fill in empty field.');
+          return;
+      }
+    }
+
+    if(document.getElementById('patient_id').value == ''){
+        openPatientBox();
+        return;
+    }
+
+    document.getElementById("gif").style.display = "block";
+    var formData = new FormData(form);
+    formData.append('audio', file);
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+           window.location.href = '/home';
+           document.getElementById("gif").style.display = "none";
+        }
+    };
+    xhr.open('POST', form.getAttribute('action'), true);
+    xhr.send(formData);
+
+}
+
+function corrected(obj){
+    if(obj.checked){
+        document.getElementById("status").value = "corrected";
+    }else{
+        document.getElementById("status").value = "";
+    }
+}
+
+function openPatientBox(){
+    document.getElementById("patientListBox").setAttribute('class', 'slide-in');
+    document.getElementById('patientListBox').style.display='block';
+    document.getElementById('backgroundOverlay').style.display='block';
+}
+
+function closePatientBox(){
+    document.getElementById('backgroundOverlay').style.display='none';
+    document.getElementById("patientListBox").setAttribute('class', 'slide-out');
+    setTimeout(function() {
+        document.getElementById('patientListBox').style.display='none';
+    }, 500);
+}
+
+function confirmPatient(obj){
+    var selpatientname = obj.querySelector("input");
+    var selpatientpicture = obj.querySelector("div");
+    document.getElementById('selected_patient').innerHTML = selpatientname.value + " has been selected to submit to";
+    document.getElementById('selected_patient').style.color = "green";
+    document.getElementById('patient_picture').src = selpatientpicture.innerHTML;
+    document.getElementById('patient_picture').style.display = "block";
+    document.getElementById('patient_id').value = obj.id;
+
+    document.getElementById('backgroundOverlay').style.display='none';
+    document.getElementById("patientListBox").setAttribute('class', 'slide-out');
+    setTimeout(function() {
+        document.getElementById('patientListBox').style.display='none';
+    }, 500);
+
+}
+
+function setTitle(obj){
+    var parent = obj.parentElement;
+    var hinput = parent.querySelector("input");
+    hinput.value = obj.value;
+}
+
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

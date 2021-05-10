@@ -1,0 +1,289 @@
+{% extends 'voxmed/base.html' %}
+{% block title %}Voxmed Web Login{% endblock %}
+{% block body %}
+
+<style>
+
+html, body{
+  background:url("/static/voxmed/images/loginbg.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+img {
+  /*border-radius: 50%;*/
+  height: 80px;
+  width: 80px;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:500px;
+  width:auto;
+  height:auto;
+  margin-top: 1%;
+  margin-bottom: 2% auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+  <!--box-shadow: 25px 25px 0 rgba(0, 0, 0, 0.2);-->
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#fff;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 0px 50px 50px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 92%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+  text-align:left;
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.icon-case {
+  width: 8%;
+  float: left;
+  border-radius: 50px 0px 0px 50px;
+  background:green;
+  height:42px;
+  position: relative;
+  text-align: center;
+  line-height:40px;
+  padding-top:11px;
+}
+
+i {
+  color:yellow;
+}
+
+.contentform {
+  padding: 30px;
+  float:middle;
+  margin:auto;
+}
+
+.bouton-update{
+  background-color: #006600;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px 50px 50px 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  <!--border-right: 1px dotted #CCC;-->
+  box-sizing: border-box;
+  padding: 0px 0px 0px 0px;
+}
+
+/* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  color:white;
+  text-shadow: 2px 2px 4px gray;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: red;
+}
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+ 	top: 6px;
+	left: 6px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+
+</style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% if note %}
+<h4><script>alert("You haven't been registered. Please register...")</script></h4>
+    {% endif %}
+
+{% if error %}
+<h4><script>alert("No provided photo. Try again ...")</script></h4>
+    {% endif %}
+
+<img src="/static/voxmed/images/progressbar.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle; border-radius: 1px;
+	transform:translate(-50%, -50%); width:auto; z-index:100; top:120px; display: none;" id="gif">
+
+<form id="edit" action="/signinprocess" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+    <div class="contentform">
+		<div class="formcontent">
+            <center>
+                <img src="/static/voxmed/images/logo.png"
+                    style="width:120px; height:120px; margin-bottom:20px; margin-right:20px; margin-left:10px;">
+            </center>
+			<div class="form-group">
+				<p>E-mail <span>*</span></p>
+				<span class="icon-case"><i class="fa fa-envelope-o"></i></span>
+                	<input type="email" name="email" id="email" data-rule="required" data-msg="" required value=""/>
+                	<div class="validation"></div>
+			</div>
+			<div class="form-group">
+				<p>Password <span>*</span></p>
+				<span class="icon-case"><i class="fa fa-lock"></i></span>
+					<input type="password" name="password" id="password" data-rule="required" data-msg="" required value=""/>
+                <div class="validation"></div>
+			</div>
+
+			<div style="width:100%; display:inline-block; margin-top:20px;">
+                <div style="float:left; width:30%; margin-left:3%;">
+                    <label class="container">Admin
+                      <input type="radio" checked="checked" name="role" value="admin">
+                      <span class="checkmark"></span>
+                    </label>
+                </div>
+                <div style="float:left; width:30%; margin-left:2%;">
+                    <label class="container">Doctor
+                      <input type="radio" name="role" value="doctor">
+                      <span class="checkmark"></span>
+                    </label>
+                </div>
+
+                <div style="float:left; width:30%; margin-left:2%;">
+                    <label class="container">Employee
+                      <input type="radio" name="role" value="employee">
+                      <span class="checkmark"></span>
+                    </label>
+                </div>
+            </div>
+
+			<div class="form-group" style="margin-top:5%;">
+				<button type="submit" class="bouton-update" onclick="progressBar()">LOG IN</button>
+            </div>
+        </div>
+	</div>
+</form>
+<script>
+    function progressBar(){
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+        if (email.length > 0 && password.length > 0){
+            document.getElementById("gif").style.display = "block";
+        }else {
+            alert("Please complete your login info ...");
+        }
+    }
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

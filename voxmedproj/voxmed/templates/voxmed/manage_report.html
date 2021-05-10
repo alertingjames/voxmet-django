@@ -1,0 +1,320 @@
+{% extends 'voxmed/base_home.html' %}
+{% block title %}Manage Report{% endblock %}
+{% block body %}
+
+<br>
+<br>
+<br>
+
+<style>
+
+html, body{
+  background: url("/static/voxmed/images/accountbg.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+form h1 {
+  font-weight:500;
+  background: #008CBA none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 15px 18px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+  opacity:0.6;
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:1200px;
+  width:auto;
+  height:auto;
+  margin-top: 0%;
+  margin-bottom: 2% auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+a {
+  text-decoration:inherit
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 30px;
+  float:middle;
+  margin:auto;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-size:16px;
+  font-weight: 800;
+  line-height: 2;
+  color: #008CBA;
+}
+
+input {
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  color:black;
+  text-align:left;
+}
+
+textarea {
+  border-radius: 8px;
+  border: 1px solid #EEE;
+  margin: 0;
+  width: 100%;
+  height: auto;
+  float: middle;
+  padding: 15px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+.bouton-update{
+  background-color: #008CBA;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+  float:right;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  box-sizing: border-box;
+}
+
+label{font-weight:600; color:#0066cc; font-size:15px;}
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<img src="/static/voxmed/images/progressbar.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle;
+	transform:translate(-50%, -50%); width:80px; z-index:2000; top:120px; display: none;" id="gif">
+
+<img src="{% if doctor %}{{doctor.picture_url}}{% else %}{% endif %}" style="position:relative; width:60px; height:60px; border-radius:50%; z-index:100; left:1%; margin-top:1%;">
+<img src="{% if patient %}{{patient.picture_url}}{% else %}{% endif %}" style="position:relative; width:60px; height:60px; border-radius:50%; z-index:100; left:1%; margin-top:1%;">
+
+<form id="edit" action="/reportupdate" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="contentform">
+		<div class="formcontent" style="margin-bottom:15%;">
+            <center>
+                <h1 style="font-size:21px; text-align:center; width:100%;">Please correct this report</h1><br>
+                <div style="color:white; font-size:20px; text-align:left; width:100%;">
+                    {% for field in fields %}
+                        <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+                        <div class="form-group">
+                            <p>{{field.title}} <span>*</span></p>
+                            <input hidden name="fieldid[]" value="{{field.id}}">
+                            <textarea name="body[]" rows="1" data-rule="required" data-msg="" class="body" required id="body" placeholder="Write something ..." style="font-size:18px;">{{field.content}}</textarea>
+                		</div>
+                        <script>autosize(document.getElementsByClassName("body"));</script>
+                    {% endfor %}
+                </div>
+            </center>
+            <input hidden name="to_email" id="to_email" value="">
+            <input hidden name="report_id" value="{{report.id}}">
+            <input hidden name="option" id="option" value="">
+			<div class="form-group" style="margin-top:3%;">
+				<button type="button" onclick="javascript:submitReport();" class="bouton-update">Submit</button>
+			</div>
+			{% if member.role == 'doctor' %}
+			<div class="form-group" style="margin-top:15px;">
+				<button type="submit" formaction="/reportdelete?report_id={{report.id}}" class="bouton-update" style="background-color:rgba(255,255,255,0.6); color:#008CBA;"
+				    onclick="javascript:return confirm('Are you sure you want to delete this report?');">Delete</button>
+			</div>
+			<div class="form-group" style="margin-top:15px;">
+				<button type="button" style="width:49%; float:left;" onclick="javascript:exportReport();" class="bouton-update">Export</button>
+				<button type="button" style="width:49%; float:right;" onclick="javascript:document.getElementById('emailBox').style.display='block';" class="bouton-update">Share Email</button>
+			</div>
+			{% endif %}
+        </div>
+	</div>
+</form>
+
+
+<div id="emailBox" style="font-size:16px; font-weight:300; color: black; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0);
+	position:fixed; left:50%; float:middle; background-color:white; border-radius:10px; padding: 10px;
+	transform:translate(-50%, -50%); min-width:350px; max-width:500px; width:auto; z-index:200; top:320px; display:none;">
+    {% csrf_token %}
+    <img src="/static/voxmed/images/cancel.png" style="width:25px; height:25px; float:right;" onclick="javascript:document.getElementById('emailBox').style.display='none';">
+    <div style="width:100%; display:inline-block;">
+        <div style="font-size:20px; font-weight:500; color: black; text-align:center;">Receiver's Email</div>
+        <br>
+        <div>
+            <form action="javascript:void(0)" method="post" enctype="multipart/form-data" style="width:100%;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div style="text-align:center; width:100%;; display:inline-block;">
+                        <input name="email" required id="email" style="border-radius:3px; border:1px solid #ccc; width:100%;" type="email" placeholder="Enter email...">
+                    </div>
+                </div>
+                <button type="button" onclick="javascript:shareReport();"
+                    style="background:#5c85d6; border-radius:5px; border:0; color:white; width:100%; font-size:16px; margin-bottom:10px; padding:8px;">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+document.getElementById("navbar").style.backgroundColor = "black";
+
+function getCookie(name) {
+    console.log('getCookie');
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                    }
+            }
+    }
+    console.log('cookie:' + cookieValue);
+    return cookieValue;
+}
+
+function post(path, params, method) {
+   method = method || "post"; // Set method to post by default if not specified.
+
+   // The rest of this code assumes you are not using a library.
+   // It can be made less wordy if you use one.
+   var form = document.createElement("form");
+   form.setAttribute("method", method);
+   form.setAttribute("action", path);
+
+   for(var key in params) {
+      if(params.hasOwnProperty(key)) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("name", key);
+          hiddenField.setAttribute("value", params[key]);
+
+          form.appendChild(hiddenField);
+      }
+   }
+
+   var hiddenField1 = document.createElement("input");
+   hiddenField1.setAttribute("type", "hidden");
+   hiddenField1.setAttribute("name", 'csrfmiddlewaretoken');
+   hiddenField1.setAttribute("value", getCookie('csrftoken'));
+   form.appendChild(hiddenField1);
+
+   document.body.appendChild(form);
+   form.submit();
+}
+
+var form = document.getElementById('edit');
+
+function submitReport(){
+
+    var x, i;
+    x = document.querySelectorAll(".body");
+    for (i = 0; i < x.length; i++) {
+      if(x[i].value == ''){
+          alert('Please fill in empty field.');
+          return;
+      }
+    }
+
+    document.getElementById('option').value = "";
+    form.submit();
+
+}
+
+function exportReport(){
+
+    var x, i;
+    x = document.querySelectorAll(".body");
+    for (i = 0; i < x.length; i++) {
+      if(x[i].value == ''){
+          alert('Please fill in empty field.');
+          return;
+      }
+    }
+
+    document.getElementById('option').value = "export";
+
+    form.submit();
+
+}
+
+function shareReport(){
+
+    var emailBox = document.getElementById('email');
+    if(emailBox.value == ''){
+        alert('Please enter the receiver\'s email.');
+        return;
+    }
+
+    var x, i;
+    x = document.querySelectorAll(".body");
+    for (i = 0; i < x.length; i++) {
+      if(x[i].value == ''){
+          alert('Please fill in empty field.');
+          return;
+      }
+    }
+
+    document.getElementById('to_email').value = emailBox.value;
+
+    document.getElementById('option').value = "share";
+
+    form.submit();
+
+}
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

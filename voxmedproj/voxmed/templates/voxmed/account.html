@@ -1,0 +1,411 @@
+{% extends 'voxmed/base_home.html' %}
+{% block title %}Admin Accounts{% endblock %}
+{% block body %}
+
+<br>
+<br>
+<br>
+
+<style>
+
+html, body{
+  background: url("/static/voxmed/images/accbg.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:600px;
+  width:auto;
+  height:auto;
+  margin-top: 2% auto;
+  margin-bottom: auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#008CBA;
+}
+
+input {
+  border-radius: 0px 50px 50px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 92%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+a {
+  text-decoration:inherit
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.icon-case {
+  width: 8%;
+  float: left;
+  border-radius: 50px 0px 0px 50px;
+  background:green;
+  height:42px;
+  position: relative;
+  text-align: center;
+  line-height:40px;
+  padding-top:11px;
+}
+
+i {
+  color:yellow;
+}
+
+.contentform {
+  padding: 20px 10px 10px 10px;
+  float:middle;
+  margin:auto;
+}
+
+.bouton-update{
+  background-color: #006600;
+  color: #FFF;
+  text-align: center;
+  width: 40%;
+  margin-bottom:3%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  box-sizing: border-box;
+  padding: 0px;
+}
+
+.validation {
+  display:none;
+  margin: 0 0 10px;
+  font-weight:400;
+  font-size:13px;
+  color: #DE5959;
+}
+
+.pan {
+  max-width:500px;
+  width:auto;
+  height:auto;
+  margin-bottom: auto;
+  margin-left:auto;
+  margin-right:0;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+.pan2 {
+  max-width:500px;
+  width:auto;
+  height:auto;
+  margin-bottom: auto;
+  margin-left:0;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+th {color:white;}
+
+td {text-align:middle;}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+.slide {
+    display: inline-block;
+}
+
+label input {
+  display: none;/* <-- hide the default checkbox */
+}
+
+label span {/* <-- style the artificial checkbox */
+  height: 25px;
+  width: 25px;
+  border:2px solid #008CBA;
+  margin-right:20px;
+  display: inline-block;
+  position: relative;
+  color:red;
+}
+
+[type=checkbox]:checked + span:before {
+/* <-- style its checked state..with a ticked icon */
+  content: '\2714';
+  position: absolute;
+  top: 0px;
+  left: 5px;
+}
+
+</style>
+
+<script type="text/javascript">
+window.onload = function() {
+	window.moveTo(0, 0);
+	window.resizeTo(screen.availWidth, screen.availHeight);
+}
+</script>
+
+<script>
+    document.getElementById("navbar").style.backgroundColor = "black";
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript" src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"></script>
+
+<span class="glyphicon glyphicon-cloud-upload" aria-hidden="true" style="font-size:20px; font-weight:800; color: yellow;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	position:fixed; left:50%; float:middle;
+	transform:translate(-50%, -50%); width:auto; max-width:400px; z-index:100; top:73px; display: none;"> CREATE NEW ACCOUNT</span>
+
+<img src="/static/voxmed/images/progressbar.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle;
+	transform:translate(-50%, -50%); width:80px; z-index:2000; top:120px; display: none;" id="gif">
+
+<img src="/static/voxmed/images/logo.png" style="position:relative; width:60px; height:60px; z-index:100; left:3%; margin-top:1%;">
+
+<div id="edit">
+    <h1 style="font-size:25px; font-weight:800; margin:auto;
+            color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;">CREATE NEW ACCOUNT</h1>
+    <div>
+        <div class="contentform">
+            <div class="formcontent">
+                <form action="javascript:void(0)" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <p>E-mail <span>*</span></p>
+                        <span class="icon-case"><i class="fa fa-envelope-o"></i></span>
+                            <input type="email" name="email" data-rule="required" data-msg="" required id="email" value="{{company.email}}" />
+                            <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <p>Password <span>*</span></p>
+                        <span class="icon-case"><i class="fa fa-lock"></i></span>
+                            <input type="password" name="password" data-rule="required" data-msg="" required id="password" value=""/>
+                        <div class="validation"></div>
+                        <label style="color:white; font-size:16px; margin:10px 0px 0px 20px;">
+                            <input type='checkbox' value="" hidden formaction="javascript:void(0);" onchange="togglepwd(this)" id="checkbox">
+                            <span style="float:left;"></span>
+                            <div style="color:#008CBA; font-size:16px; padding-top:3px; float:left;">Show password</div>
+                        </label><br>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="bouton-update" onclick="progressBar()" formaction="/addadminaccount" style="float:right;">REGISTER</button>
+                    </div>
+                </form>
+                <h1 style="font-size:20px; font-weight:800; margin:auto; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;">MY ACCOUNTS</h1>
+                <div style="width:100%; margin-bottom:30px;">
+                    <div>
+                        <div style="width:100%; max-height:70%; overflow:auto;">
+                            {% if accounts %}
+                                {% for account in accounts %}
+                                    <div style="width:100%; margin-top:30px;">
+                                        <div style="width:75%; padding:5px; text-align:left; float:left;">
+                                            <div style="width:auto; font-size:16px; color:black;">{{account.email}}</div>
+                                            <input type="password" id="pwd" style="width:auto; font-size:16px; color:black; background-color:transparent; border:0; padding:0px; height:auto;" value="{{account.password}}" readonly>
+                                            <label style="color:white; font-size:16px; margin:10px 0px 0px 0px;">
+                                                <input type='checkbox' value="" hidden formaction="javascript:void(0);" onchange="togglepwd2(this)" id="checkbox">
+                                                <span style="float:left;"></span>
+                                                <div style="color:#008CBA; font-size:16px; padding-top:3px; float:left;">Show</div>
+                                            </label>
+                                        </div>
+                                        <div style="width:25%; text-align:right; float:left; margin-top:10px;">
+                                            <a href="/delaccount/{{account.id}}" class="btn btn-info btn-lg" onclick="return confirm('Are you sure delete this account?');"
+                                                                   style="padding:6px; margin-left:5px; font-size:18px; text-align:center; background:transparent; border:1px solid transparent; color:green;">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </a>
+                                        </div>
+                                        <div style="width:75%; height:3px; border-radius:50px; background-color:#99ccff; float:left; margin-bottom:25px;"></div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <center>
+                                    <br>
+                                    <br>
+                                    <h5 class="my_items col-sm-offset-1" style="color:red; margin: 10px;">No account registered ...</h5>
+                                </center>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Top">Top</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("myBtn").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+function togglepwd(obj){
+	var x = document.getElementById("password");
+    if (obj.checked) {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+}
+
+function togglepwd2(obj){
+    if (obj.checked) {
+        obj.parentElement.parentElement.querySelector('#pwd').type = "text";
+    } else {
+        obj.parentElement.parentElement.querySelector('#pwd').type = "password";
+    }
+}
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

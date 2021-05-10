@@ -1,0 +1,415 @@
+{% extends 'voxmed/base_home.html' %}
+{% block title %}Templates{% endblock %}
+{% block body %}
+
+<br>
+<br>
+<br>
+
+<style>
+
+html, body{
+  background: linear-gradient(0deg,rgba(252,252,252,0.5),rgba(252,252,252,0.5)), url("/static/voxmed/images/accountbg.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+#edit {
+  border-radius: 5px;
+  width:100%;
+  height:auto;
+  margin-top: 2% auto;
+  margin-bottom: auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#008CBA;
+}
+
+input {
+  border-radius: 8px 0px 0px 8px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 80%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+  text-align:left;
+}
+
+#price {
+  border-radius: 0px 0px 0px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 65%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+select {
+  border-radius: 0px 50px 50px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  width: 92%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+a {
+  text-decoration:inherit
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.icon-case {
+  width: 8%;
+  float: left;
+  border-radius: 50px 0px 0px 50px;
+  background:green;
+  height:42px;
+  position: relative;
+  text-align: center;
+  line-height:40px;
+  padding-top:11px;
+}
+
+i {
+  color:yellow;
+}
+
+.contentform {
+  padding: 20px 0px 0px 0px;
+  float:middle;
+  margin:auto;
+}
+
+.bouton-update{
+  background-color: #006600;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  margin-bottom:10%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  box-sizing: border-box;
+  padding: 0px;
+}
+
+.validation {
+  display:none;
+  margin: 0 0 10px;
+  font-weight:400;
+  font-size:13px;
+  color: #DE5959;
+}
+
+.pan {
+  max-width:500px;
+  width:auto;
+  height:auto;
+  margin-bottom: auto;
+  margin-left:auto;
+  margin-right:0;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+.pan2 {
+  max-width:500px;
+  width:auto;
+  height:auto;
+  margin-bottom: auto;
+  margin-left:0;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+th {color:white;}
+
+td {text-align:middle;}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+.slide {
+    display: inline-block;
+}
+
+</style>
+
+<script type="text/javascript">
+window.onload = function() {
+	window.moveTo(0, 0);
+	window.resizeTo(screen.availWidth, screen.availHeight);
+}
+</script>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript" src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"></script>
+
+<span class="glyphicon glyphicon-cloud-upload" aria-hidden="true" style="font-size:20px; font-weight:800; color: yellow;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	position:fixed; left:50%; float:middle;
+	transform:translate(-50%, -50%); width:auto; max-width:400px; z-index:100; top:73px; display: none;"> Report Templates</span>
+
+<img src="/static/voxmed/images/progressbar.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle;
+	transform:translate(-50%, -50%); width:80px; z-index:2000; top:120px; display: none;" id="gif">
+
+<img src="/static/voxmed/images/logo.png" style="position:relative; width:60px; height:60px; border-radius:50%; z-index:100; left:3%; margin-top:1%;">
+
+<div id="edit">
+    <h1 style="font-size:25px; font-weight:800; margin:auto;
+            color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;">Report Templates</h1>
+    <div class="container-fluid" style="margin-top:10px;">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="pan">
+                    <div class="contentform">
+                        <div class="formcontent">
+                            <p style="float:left;">Choose a template <span>*</span></p>
+                            <button type="button" onclick="javascript:showNewTemplateBox();"
+                                style="width:30px; height:30px; border-radius:50%; background:green; color:white; font-size:20px; border:0; float:left; margin-left:20px;">+</button>
+                            <div style="width:100%; margin-bottom:30px;">
+                                <div>
+                                    <div style="width:100%; max-height:70%; overflow:auto;">
+                                        {% if templates %}
+                                            {% for temp in templates %}
+                                                <a href="javascript:void(0);" style="width:100%; margin-top:30px;" onclick="javascript:selectTemplate(this, {{temp.id}});">
+                                                    <div style="width:70%; padding:15px 10px 5px 10px; font-size:18px; color:black; text-align:left; float:left; font-weight:600;">{{temp.name}}</div>
+                                                    <div style="width:25%; text-align:right; float:left; margin-top:10px;">
+                                                        <a href="/tempdelete?temp_id={{temp.id}}" class="btn btn-info btn-lg" onclick="return confirm('Are you sure delete this template?');"
+                                                           style="padding:6px; margin-left:5px; font-size:18px; text-align:center; background:transparent; border:1px solid transparent; color:green;">
+                                                            <span class="glyphicon glyphicon-trash"></span>
+                                                        </a>
+                                                        <a href="/tempchoose?temp_id={{temp.id}}" class="btn btn-info btn-lg"
+                                                           style="padding:6px; margin-left:5px; font-size:22px; text-align:center; background:transparent; border:1px solid transparent; color:green;">
+                                                            <span class="fa fa-hand-rock-o" aria-hidden="true"></span>
+                                                        </a>
+                                                    </div>
+                                                    <div style="width:75%; height:3px; border-radius:50px; background-color:#99ccff; float:left;"></div>
+                                                </a>
+                                            {% endfor %}
+                                        {% else %}
+                                            <center>
+                                                <h5 class="my_items col-sm-offset-1" style="color:red; margin: 10px;">No result found ...</h5></center>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="pan2" style="padding-bottom:30px;">
+                    <div class="contentform">
+                        <div class="formcontent">
+                            <div class="form-group">
+                                <div id="tempCaption" style="color:white; font-size:25px; font-weight:600; width:100%; text-align:center;"></div>
+                                <p style="margin-top:30px;">Keywords For The Template <span>*</span></p>
+                                <form style="margin-top:15px; margin-bottom:10px; width:100%; display:none;" id="subAddFrame" action="/newKeywordAdd" method="post" enctype="multipart/form-data">
+                                    <input name="new_keyword" required placeholder="Add New Keyword" style="float:left;"/>
+                                    <input name="temp_id" id="temp_id" hidden>
+                                    <button type="submit"
+                                            style="width:18%; float:left; background:green; color:white; height:42px; font-size:20px; border-radius:0px 8px 8px 0px; border:0;">+</button>
+                                </form>
+
+                                {% for ttemp in templates %}
+                                    <div style="display:none;" id="{{ttemp.id}}">
+                                        {% if ttemp.keywords %}
+                                        </script>
+                                        <div style="width:100%; margin-bottom:30px;">
+                                            <div>
+                                                <div style="width:100%; max-height:70%; overflow:auto;">
+                                                    {% for keyword in ttemp.keywords %}
+                                                    <div style="width:100%; margin-top:30px;">
+                                                        <div style="width:75%; padding:15px 10px 5px 10px; font-size:18px; color:black; text-align:left; float:left;">{{keyword.keyword}}</div>
+                                                        <div style="width:25%; text-align:right; float:left; margin-top:10px;">
+                                                            <a href="/keyworddelete?keyword_id={{keyword.id}}" class="btn btn-info btn-lg" onclick="return confirm('Are you sure delete this keyword?');"
+                                                               style="padding:6px; margin-left:5px; font-size:18px; text-align:center; background:transparent; border:1px solid transparent; color:green;">
+                                                                <span class="glyphicon glyphicon-trash"></span>
+                                                            </a>
+                                                        </div>
+                                                        <div style="width:75%; height:3px; border-radius:50px; background-color:#99ccff; float:left;"></div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% else %}
+                                            <center>
+                                                <h5 class="my_items col-sm-offset-1" style="color:red; margin-top: 30px;">No result found ...</h5>
+                                            </center>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="newTemplateBox" style="font-size:16px; font-weight:300; color: black; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0);
+	position:fixed; left:50%; float:middle; background-color:white; border-radius:10px; padding: 10px;
+	transform:translate(-50%, -50%); min-width:350px; max-width:500px; width:auto; z-index:200; top:320px; display:none;">
+    {% csrf_token %}
+    <img src="/static/voxmed/images/cancel.png" style="width:25px; height:25px; float:right;" onclick="javascript:document.getElementById('newTemplateBox').style.display='none';">
+    <div style="width:100%; display:inline-block;">
+        <div style="font-size:20px; font-weight:500; color: black; text-align:center;">Add New Template</div>
+        <br>
+        <div>
+            <form action="/newTemplateAdd" method="post" enctype="multipart/form-data" style="width:100%;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div style="text-align:center; width:100%;; display:inline-block;">
+                        <input name="name" required id="name" style="border-radius:3px; border:1px solid #ccc; width:100%;" type="text" placeholder="Enter template name...">
+                    </div>
+                </div>
+                <button type="submit" style="background:#5c85d6; border-radius:5px; border:0; color:white; width:100%; font-size:16px; margin-bottom:10px; padding:8px;">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Top">Top</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("myBtn").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+document.getElementById("navbar").style.backgroundColor = "black";
+
+function showNewTemplateBox(obj){
+    document.getElementById('newTemplateBox').style.display='block';
+}
+
+var oldObj;
+var oldObj2;
+var selectedTempId;
+
+function selectTemplate(obj, tempid){
+    selectedTempId = tempid;
+    obj.querySelector("div").style.color = "red";
+    if (oldObj != null && oldObj != obj) oldObj.querySelector("div").style.color = "black";
+    oldObj = obj;
+    document.getElementById("tempCaption").innerHTML = obj.querySelector("div").innerHTML;
+    document.getElementById(tempid).style.display = "block";
+    document.getElementById("subAddFrame").style.display = "block";
+    if (oldObj2 != null && oldObj2 != document.getElementById(tempid)) oldObj2.style.display = "none";
+    oldObj2 = document.getElementById(tempid);
+    document.getElementById('temp_id').value = tempid;
+}
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
